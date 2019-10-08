@@ -23,12 +23,23 @@ taserver.get('/alunos', function (req: express.Request, res: express.Response) {
 })
 
 taserver.post('/aluno', function (req: express.Request, res: express.Response) {
-  var aluno: Aluno = <Aluno> req.body; //verificar se é mesmo Aluno!
+  var aluno: Aluno = <Aluno> req.body; //verificar se ï¿½ mesmo Aluno!
+  const cause = !cadastro.githubNaoCadastrado(aluno.loginGithub) ? "github" : "cpf"
+  
   aluno = cadastro.cadastrar(aluno);
   if (aluno) {
     res.send({"success": "O aluno foi cadastrado com sucesso"});
   } else {
-    res.send({"failure": "O aluno não pode ser cadastrado"});
+    res.send({"failure": "O aluno nï¿½o pode ser cadastrado", cause});
+  }
+})
+
+taserver.delete('/aluno/:cpf', function (req, res) {
+  const removeu = cadastro.remover(req.params.cpf)
+  if(removeu){
+    res.send({"success": "O aluno foi removido com sucesso"})
+  } else {
+    res.send({"failure": "O aluno nÃ£o pode ser removido"})
   }
 })
 
@@ -38,7 +49,7 @@ taserver.put('/aluno', function (req: express.Request, res: express.Response) {
   if (aluno) {
     res.send({"success": "O aluno foi atualizado com sucesso"});
   } else {
-    res.send({"failure": "O aluno não pode ser atualizado"});
+    res.send({"failure": "O aluno nï¿½o pode ser atualizado"});
   }
 })
 
